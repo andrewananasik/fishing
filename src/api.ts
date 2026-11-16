@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Action, Player, View } from '../shared/types.ts';
+import type { RoomSnapshot } from '../shared/multiplayer.ts';
 import { actionSounds, playSound } from './sound.ts';
 
 export type SendAction = (action: Action) => Promise<Player | null>;
@@ -11,6 +12,16 @@ export function useGame() {
   const [error, setError] = useState('');
   const latest = useRef<View | null>(null);
   const inFlight = useRef(false);
+  const [room, setRoom] = useState<RoomSnapshot | null>(null);
+  const [connection, setConnection] = useState<'connecting' | 'online' | 'reconnecting'>('connecting');
+
+  const acceptView = useCallback((result: View) => {
+    const previous = latest.current?.player;
+    if (previous && result.player && result.player.revision < previous.revision) return;
+    latest.current = result;
+    setView(result);
+    if (!result.player?.trip) setRoom(null);
+  }, []);
 
   const request = useCallback(async (path: string, payload?: object) => {
     if (inFlight.current) return null;
@@ -28,8 +39,7 @@ export function useGame() {
       const result = await response.json() as View;
       if (response.status >= 500) throw new Error(result.error);
       setOffset(result.serverNow - (sentAt + Date.now()) / 2);
-      latest.current = result;
-      setView(result);
+      acceptView(result);
       setError(result.error ?? '');
       return response.ok ? result : null;
     } catch {
@@ -39,7 +49,7 @@ export function useGame() {
       inFlight.current = false;
       if (payload) setBusy(false);
     }
-  }, []);
+  }, [acceptView]);
 
   const refresh = useCallback(() => request('/api/state'), [request]);
   const join = (nickname: string) => request('/api/join', { nickname });
@@ -52,6 +62,37 @@ export function useGame() {
   };
 
   useEffect(() => { void refresh(); }, [refresh]);
+
+  const loggedIn = Boolean(view?.player);
+  useEffect(() => {
+    if (!loggedIn) return;
+    let source: EventSource;
+    let lastMessage = Date.now();
+    let connected = false;
+    function open() {
+      source?.close();
+      source = new EventSource('/api/events');
+      setConnection(connected ? 'reconnecting' : 'connecting');
+      lastMessage = Date.now();
+      const alive = () => { lastMessage = Date.now(); connected = true; setConnection('online'); };
+      source.addEventListener('state', (event) => {
+        alive();
+        acceptView(JSON.parse(event.data) as View);
+      });
+      source.addEventListener('room', (event) => {
+        alive();
+        setRoom(JSON.parse(event.data) as RoomSnapshot);
+      });
+      source.addEventListener('heartbeat', alive);
+      source.onerror = () => { setConnection('reconnecting'); setRoom(null); };
+    }
+    open();
+    // Also recover from silently stalled proxy/network connections.
+    const watchdog = setInterval(() => {
+      if (Date.now() - lastMessage > 25_000) { setRoom(null); open(); }
+    }, 5_000);
+    return () => { source.close(); clearInterval(watchdog); };
+  }, [loggedIn, acceptView]);
 
   const trip = view?.player?.trip;
   const nextDeadline = trip && Math.min(
@@ -75,7 +116,7 @@ export function useGame() {
     };
   }, [nextDeadline, offset, refresh, view]);
 
-  return { view, offset, busy, error, refresh, join, send };
+  return { view, offset, busy, error, refresh, join, send, room: room?.spot === trip?.spot ? room : null, connection };
 }
 
 export function useNow(offset: number, interval: number, active = true) {

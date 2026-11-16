@@ -1,0 +1,21 @@
+.other-fishers, .remote-fisher { position: absolute; inset: 0; pointer-events: none; }
+.other-fishers { z-index: 1; }
+.water-world .boat-inventory { width: 9.5%; }
+.remote-fisher[data-connected="false"] { opacity: .45; }
+.fisher-name { position: absolute; translate: -50% 0; margin-top: 4%; display: grid; justify-items: center; max-width: 160px; padding: 4px 8px; border: 1px solid #c4c8ab40; border-top: 3px solid var(--fisher-color); border-radius: 4px; background: #10231deb; color: #f0ead5; font-size: var(--text-caption); line-height: var(--leading-caption); text-align: center; box-shadow: 0 3px 12px #07151040; }
+.fisher-name bdi { max-width: 100%; overflow-wrap: anywhere; font-weight: 600; }
+.fisher-name span { color: #c6d1ba; }
+.fishing-company { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 4px; background: #12231de8; color: #ead5aa; font-size: var(--text-caption); line-height: var(--leading-caption); }
+.fishing-company i { width: 6px; height: 6px; border-radius: 50%; background: #d9b46b; }
+.fishing-company[data-online="true"] { color: #e1ead3; }
+.fishing-company[data-online="true"] i { background: #a8d38d; }
+.fishing-company span { color: #b5c4a9; }
+@media (max-width: 650px) {
+  .water-world .boat-inventory { width: 14%; }
+  .fisher-name { max-width: 14vw; padding: 2px 4px; margin-top: 6%; }
+  .fisher-name bdi { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fisher-name span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .remote-fisher[data-connected="true"] .fisher-name:is([data-activity="idle"], [data-activity="rowing"]) span { display: none; }
+  .fishing-company { gap: 4px 8px; }
+  .fishing-company span { display: none; }
+}

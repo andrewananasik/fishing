@@ -14,12 +14,13 @@ import './tackle.css';
 import './interface.css';
 import './cards.css';
 import './card-typography.css';
+import './multiplayer.css';
 
 type Page = 'dock' | 'map' | 'market' | 'rank';
 
 function App() {
   useInterfaceSound();
-  const { view, offset, busy, error, refresh, join, send } = useGame();
+  const { view, offset, busy, error, refresh, join, send, room, connection } = useGame();
   const [page, setPage] = useState<Page>('dock');
   const [nickname, setNickname] = useState('');
   const [seenResult, setSeenResult] = useState<number | null>(null);
@@ -51,9 +52,9 @@ function App() {
             <input id="nickname" name="nickname" placeholder="Ваше имя" value={nickname} onChange={(event) => setNickname(event.target.value)} maxLength={24} required autoComplete="nickname" aria-describedby="nickname-hint" />
             <button className="primary" disabled={busy || !nickname.trim()}>На причал</button>
           </form>
-          <p className="join-note" id="nickname-hint">До 24 символов. Имя будет видно в общем рейтинге.</p>
+          <p className="join-note" id="nickname-hint">До 24 символов. Имя увидят другие рыбаки на воде и в рейтинге.</p>
         </section></div>}
-        {player && (player.trip ? <Fishing player={player} trip={player.trip} busy={busy} send={send} offset={offset} /> :
+        {player && (player.trip ? <Fishing player={player} trip={player.trip} busy={busy} send={send} offset={offset} room={room} connection={connection} /> :
           result ? <FishingResults result={result} market={() => navigate('market')} rank={() => navigate('rank')} dock={() => navigate('dock')} /> :
           page === 'market' ? <Market player={player} busy={busy} send={send} back={() => navigate('dock')} /> :
           <Dock player={player} busy={busy} send={send} openMap={() => navigate('map')} openMarket={() => navigate('market')} openRank={() => navigate('rank')} />)}

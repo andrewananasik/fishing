@@ -1,5 +1,6 @@
 import type { BaitId, CardId, FishId, SpotId, UpgradeId } from './content.ts';
 import type { Difficulty, Point, Voyage } from './navigation.ts';
+import type { Appearance } from './multiplayer.ts';
 
 export type Catch = { id: string; species: FishId };
 export type Placement = Catch & { x: number; y: number; rotated: boolean };
@@ -57,6 +58,7 @@ export type TripResult = {
 export type Roll = { id: string; species: FishId; card: CardId; duplicateGold: number };
 
 export type Player = {
+  appearance?: Appearance;
   activeQuest: { id: string; progress: number } | null;
   completedQuests: string[];
   nickname: string;

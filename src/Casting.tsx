@@ -9,8 +9,10 @@ import { FishingRig, FishingWater, targetPosition } from './Pond.tsx';
 import { zoneRisk } from './GameArt.tsx';
 import { RoomDialog } from './Dialog.tsx';
 import { playSound } from './sound.ts';
+import type { Appearance, RoomSnapshot } from '../shared/multiplayer.ts';
+import { OtherFishers } from './Multiplayer.tsx';
 
-type Props = { trip: Trip; busy: boolean; send: SendAction; offset: number; openCargo: () => void };
+type Props = { trip: Trip; busy: boolean; send: SendAction; offset: number; openCargo: () => void; appearance?: Appearance; room?: RoomSnapshot | null };
 
 function HookGame({ trip, zone, busy, send, offset, close }: Omit<Props, 'openCargo'> & { zone: number; close: () => void }) {
   const [attempted, setAttempted] = useState(Boolean(trip.bite));
@@ -71,7 +73,7 @@ function HookGame({ trip, zone, busy, send, offset, close }: Omit<Props, 'openCa
   </RoomDialog>;
 }
 
-export function Casting({ trip, busy, send, offset, openCargo }: Props) {
+export function Casting({ trip, busy, send, offset, openCargo, appearance, room }: Props) {
   const [miniZone, setMiniZone] = useState<number | null>(trip.bite?.zone ?? null);
   const [help, setHelp] = useState(false);
   const [notice, setNotice] = useState('');
@@ -125,7 +127,8 @@ export function Casting({ trip, busy, send, offset, openCargo }: Props) {
   return <section className="casting" aria-label="Лодка и рыбалка">
     <FishingWater spot={trip.spot} onNavigate={navigate}>
       {moving && trip.voyage && <svg className="voyage-route" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true"><path d={`M${position.x * 1600} ${position.y * 900}L${trip.voyage.to.x * 1600} ${trip.voyage.to.y * 900}`} /><ellipse cx={trip.voyage.to.x * 1600} cy={trip.voyage.to.y * 900} rx="18" ry="9" /></svg>}
-      <FishingRig spot={trip.spot} position={position} heading={trip.heading ?? -Math.PI / 4} moving={moving} bite={trip.bite} fightZone={trip.battle?.zone ?? null} bait={trip.bait} offset={offset} />
+      <OtherFishers room={room ?? null} offset={offset} />
+      <FishingRig spot={trip.spot} position={position} heading={trip.heading ?? -Math.PI / 4} moving={moving} bite={trip.bite} fightZone={trip.battle?.zone ?? null} bait={trip.bait} offset={offset} appearance={appearance} room={room} />
       <button className="boat-inventory" style={{ left: `${position.x * 100}%`, top: `${position.y * 100}%` }} aria-label="Открыть трюм лодки" onClick={openCargo}><span>Трюм</span></button>
       {zones.map((zone, index) => {
         const odds = oddsFor(zone, trip.bait);

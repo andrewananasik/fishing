@@ -8,6 +8,11 @@ import { baits, cards, spots, upgrades } from '../shared/content.ts';
 import { advancePlayer, applyAction, newPlayer, RuleError } from '../shared/game.ts';
 import type { Action, Leader, Player, View } from '../shared/types.ts';
 import { migratePlayer } from '../shared/quests.ts';
+import { randomAppearance } from '../shared/multiplayer.ts';
+import { FishingRooms } from './rooms.ts';
+import type { RoomClient } from './rooms.ts';
+
+const rooms = new FishingRooms();
 
 const databasePath = resolve(process.env.FISHING_DB ?? 'data/fishing.sqlite');
 mkdirSync(dirname(databasePath), { recursive: true });
@@ -39,12 +44,19 @@ const ownQuery = db.prepare(`
 function load(session: string | null): Player | null {
   if (!session) return null;
   const row = read.get(session);
-  return row ? migratePlayer(JSON.parse(String(row.state)) as Player) : null;
+  if (!row) return null;
+  const player = migratePlayer(JSON.parse(String(row.state)) as Player);
+  if (!player.appearance) {
+    player.appearance = randomAppearance(() => randomInt(1_000_000) / 1_000_000);
+    save(session, player);
+  }
+  return player;
 }
 
 function save(session: string, player: Player) {
   player.revision += 1;
   write.run(session, JSON.stringify(player));
+  rooms.saved(session, player, Date.now());
 }
 
 function cookie(request: IncomingMessage) {
@@ -165,6 +177,27 @@ const server = createServer(async (request, response) => {
   try {
     const method = request.method;
     const path = request.url?.split('?')[0] ?? '/';
+    if (method === 'GET' && path === '/api/events') {
+      const player = load(session);
+      if (!session || !player) return view(response, 401, null, 'Сначала введите имя.');
+      if (rooms.connections(session) >= 4) return json(response, 429, { error: 'Открыто слишком много вкладок игры.' });
+      const now = Date.now();
+      if (advancePlayer(player, now)) save(session, player);
+      response.writeHead(200, {
+        'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform',
+        'Connection': 'keep-alive', 'X-Accel-Buffering': 'no',
+      });
+      response.flushHeaders();
+      response.write('retry: 2000\n\n');
+      const client: RoomClient = {
+        send: (event, value) => !response.destroyed && !response.writableEnded && response.write(`event: ${event}\ndata: ${JSON.stringify(value)}\n\n`),
+        close: () => response.destroy(),
+      };
+      response.on('close', () => rooms.disconnect(session, client, Date.now()));
+      response.on('error', () => rooms.disconnect(session, client, Date.now()));
+      rooms.connect(session, player, client, now);
+      return;
+    }
     if (method === 'GET' && path === '/api/ranking') return json(response, 200, ranking(session));
     if (method === 'GET' && path === '/api/state') {
       const player = load(session);
@@ -179,6 +212,7 @@ const server = createServer(async (request, response) => {
       if (!nickname || nickname.length > 24 || /\p{C}/u.test(nickname)) throw new RuleError('Введите имя длиной от 1 до 24 символов.');
       const newSession = randomUUID();
       const player = newPlayer(nickname);
+      player.appearance = randomAppearance(() => randomInt(1_000_000) / 1_000_000);
       save(newSession, player);
       const secure = request.headers['x-forwarded-proto'] === 'https' ? '; Secure' : '';
       response.setHeader('Set-Cookie', `fishing=${newSession}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${secure}`);
@@ -191,7 +225,9 @@ const server = createServer(async (request, response) => {
       const now = Date.now();
       if (advancePlayer(player, now)) save(session, player);
       if (input.revision !== player.revision) return view(response, 409, player, 'Игра уже перешла в следующее состояние.');
-      applyAction(player, actionFrom(input), { now, random: () => randomInt(1_000_000) / 1_000_000, nextId: randomUUID });
+      const action = actionFrom(input);
+      applyAction(player, action, { now, random: () => randomInt(1_000_000) / 1_000_000, nextId: randomUUID });
+      if (action.type === 'start') rooms.update(session, player, now, true);
       save(session, player);
       return view(response, 200, player);
     }
@@ -205,5 +241,17 @@ const server = createServer(async (request, response) => {
 });
 
 const host = process.env.HOST ?? '127.0.0.1';
+const roomTimer = setInterval(() => {
+  const now = Date.now();
+  rooms.tick(now, (session, player) => {
+    if (advancePlayer(player, now)) save(session, player);
+  });
+}, 200);
+const heartbeatTimer = setInterval(() => rooms.heartbeat(Date.now()), 10_000);
+roomTimer.unref();
+heartbeatTimer.unref();
 const port = Number(process.env.PORT ?? 4173);
-server.listen(port, host, () => console.log(`Болотная рыбалка: http://${host}:${port}`));
+server.listen(port, host, () => {
+  const address = server.address();
+  console.log(`Болотная рыбалка: http://${host}:${typeof address === 'object' && address ? address.port : port}`);
+});

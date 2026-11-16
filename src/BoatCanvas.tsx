@@ -1,27 +1,27 @@
 import { useEffect, useRef } from 'react';
 import type { BaitId, SpotId } from '../shared/content.ts';
 import type { Trip } from '../shared/types.ts';
-import { fishingTargets, headingFrame, launchPosition } from '../shared/navigation.ts';
+import { boatAt, fishingTargets, headingFrame, launchPosition } from '../shared/navigation.ts';
 import type { Point } from '../shared/navigation.ts';
 import atlasUrl from './art/boat-directions.png';
+import type { Appearance, RoomSnapshot } from '../shared/multiplayer.ts';
+import { boatAppearance } from './boatAppearance.ts';
 
-type Props = { spot: SpotId; position?: Point; heading?: number; moving?: boolean; bite?: Trip['bite']; fightZone?: number | null; bait?: BaitId; offset?: number };
+type Props = { spot: SpotId; position?: Point; heading?: number; moving?: boolean; bite?: Trip['bite']; fightZone?: number | null; bait?: BaitId; offset?: number; appearance?: Appearance; room?: RoomSnapshot | null };
 type Wake = { x: number; y: number; heading: number; at: number; side: number };
 
-export function FishingRig({ spot, position = launchPosition(spot), heading = -Math.PI / 4, moving = false, bite = null, fightZone = null, bait = 'worm', offset = 0 }: Props) {
+export function FishingRig({ spot, position = launchPosition(spot), heading = -Math.PI / 4, moving = false, bite = null, fightZone = null, bait = 'worm', offset = 0, appearance, room }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
-  const state = useRef({ spot, position, heading, moving, bite, fightZone, bait, offset });
-  state.current = { spot, position, heading, moving, bite, fightZone, bait, offset };
+  const state = useRef({ spot, position, heading, moving, bite, fightZone, bait, offset, appearance, room });
+  state.current = { spot, position, heading, moving, bite, fightZone, bait, offset, appearance, room };
   useEffect(() => {
     const surface = canvas.current;
     const ctx = surface?.getContext('2d');
     if (!surface || !ctx) return;
     const atlas = new Image();
     atlas.src = atlasUrl;
-    let width = 0, height = 0, frame = 0, lastTime = 0, lastWake = 0;
-    let direction = state.current.heading;
-    let lastBite: number | null = null, flightAt = 0;
-    let wakes: Wake[] = [];
+    let width = 0, height = 0, frame = 0, lastTime = 0;
+    const animations = new Map<string, { direction: number; lastBite: number | null; flightAt: number; lastWake: number; wakes: Wake[] }>();
     const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
     const dpr = Math.min(devicePixelRatio, 2);
     function measure() {
@@ -30,17 +30,32 @@ export function FishingRig({ spot, position = launchPosition(spot), heading = -M
       surface!.width = Math.round(width * dpr); surface!.height = Math.round(height * dpr);
     }
     function draw(t: number) {
-      const s = state.current;
+      const current = state.current;
+      const now = Date.now() + current.offset;
+      const rigs = (current.room?.fishers ?? []).filter(fisher => fisher.id !== current.room?.selfId).map(fisher => ({
+        ...fisher, position: boatAt(fisher, now), moving: Boolean(fisher.voyage && now < fisher.voyage.arrivesAt), offset: current.offset,
+      }));
+      const all = [...rigs, { ...current, id: 'self', connected: true }];
+      const ids = new Set(all.map(rig => rig.id));
+      for (const id of animations.keys()) if (!ids.has(id)) animations.delete(id);
       const reduced = motionQuery.matches;
       const dt = Math.min(50, t - (lastTime || t)); lastTime = t;
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx!.clearRect(0, 0, width, height);
+      for (const s of all) {
+      let animation = animations.get(s.id);
+      if (!animation) {
+        animation = { direction: s.heading, lastBite: null, flightAt: 0, lastWake: 0, wakes: [] };
+        animations.set(s.id, animation);
+      }
+      let { direction, lastBite, flightAt, lastWake, wakes } = animation;
       const turn = Math.atan2(Math.sin(s.heading - direction), Math.cos(s.heading - direction));
       direction += reduced ? turn : Math.sign(turn) * Math.min(Math.abs(turn), dt * .009);
-      const boatSize = width * (width < 650 ? .23 : .145);
+      const boatSize = width * (width < 650 ? .14 : .095);
       const x = s.position.x * width, y = s.position.y * height;
       const dx = Math.cos(direction), dy = Math.sin(direction);
       if (width && height && !document.hidden) {
-        ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx!.clearRect(0, 0, width, height);
+        ctx!.globalAlpha = s.connected ? 1 : .45;
         // Wake samples stay in world coordinates after the boat has moved away.
         if (s.moving && !reduced && t - lastWake > 110) {
           wakes.push({ x: (x - dx * boatSize * .28) / width, y: (y - dy * boatSize * .24) / height, heading: direction, at: t, side: 0 });
@@ -87,7 +102,7 @@ export function FishingRig({ spot, position = launchPosition(spot), heading = -M
           ctx!.save();
           ctx!.filter = 'url(#sprite-cutout)';
           ctx!.shadowColor = '#061c1770'; ctx!.shadowBlur = 5; ctx!.shadowOffsetY = 5;
-          ctx!.drawImage(atlas, index % 4 * cellW, Math.floor(index / 4) * cellH, cellW, cellH, x - boatSize / 2, y - boatSize / 2, boatSize, boatSize);
+          ctx!.drawImage(boatAppearance(atlas, s.appearance), index % 4 * cellW, Math.floor(index / 4) * cellH, cellW, cellH, x - boatSize / 2, y - boatSize / 2, boatSize, boatSize);
           ctx!.restore();
         }
         const target = s.bite?.position ?? (s.fightZone !== null ? fishingTargets(s.spot)[s.fightZone] : null);
@@ -114,6 +129,9 @@ export function FishingRig({ spot, position = launchPosition(spot), heading = -M
           ctx!.fillStyle = s.bait === 'worm' ? '#df825d' : '#e7bd68'; ctx!.beginPath(); ctx!.ellipse(bx, by - 3, 3, 3, 0, 0, Math.PI * 2); ctx!.fill();
         }
       }
+      Object.assign(animation, { direction, lastBite, flightAt, lastWake, wakes });
+      }
+      ctx!.globalAlpha = 1;
       frame = requestAnimationFrame(draw);
     }
     const resize = new ResizeObserver(measure); resize.observe(surface); measure();

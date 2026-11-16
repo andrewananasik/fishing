@@ -20,6 +20,8 @@ import { Casting } from './Casting.tsx';
 
 import { playSound } from './sound.ts';
 import { SoundToggle } from './Sound.tsx';
+import type { RoomSnapshot } from '../shared/multiplayer.ts';
+import { FishingCompany } from './Multiplayer.tsx';
 
 type TripProps = { player: Player; trip: Trip; busy: boolean; send: SendAction };
 const FIGHT_INTRO_MS = 2_100;
@@ -140,7 +142,7 @@ function BattlePanel({ player, battle, busy, send }: Pick<TripProps, 'player' | 
   );
 }
 
-export function Fishing({ player, trip, busy, send, offset }: TripProps & { offset: number }) {
+export function Fishing({ player, trip, busy, send, offset, room, connection }: TripProps & { offset: number; room: RoomSnapshot | null; connection: 'connecting' | 'online' | 'reconnecting' }) {
   const [cargoOpen, setCargoOpen] = useState(Boolean(trip.pending && !trip.outcome));
   const [introducedBattle, setIntroducedBattle] = useState(trip.battle?.startedAt);
   const { battle } = trip;
@@ -160,10 +162,11 @@ export function Fishing({ player, trip, busy, send, offset }: TripProps & { offs
   }
   return (
     <section className="fishing-scene">
-      <Casting trip={trip} busy={busy} send={send} offset={offset} openCargo={()=>setCargoOpen(true)} />
+      <Casting trip={trip} busy={busy} send={send} offset={offset} openCargo={()=>setCargoOpen(true)} appearance={player.appearance} room={room} />
       <div className="fishing-hud">
         <div className="fishing-location">
           <span className="eyebrow">На воде · {baits[trip.bait].name}</span><h1>{getSpot(trip.spot).name}</h1>
+          <FishingCompany room={room} connection={connection} />
           <button data-sound="wood" onClick={()=>setCargoOpen(true)}>Трюм · {used} / {width*height}</button>
         </div>
         <div className="fishing-return"><TripClock trip={trip} offset={offset} /><button disabled={busy || Boolean(trip.battle || trip.pending || trip.outcome)} onClick={()=>void send({type:'return'})}>Вернуться на причал</button></div>
