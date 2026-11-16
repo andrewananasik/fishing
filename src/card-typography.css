@@ -1,0 +1,46 @@
+/* Harness text roles applied to the illustrated card shell in cards.css.
+   Percentage trim geometry is artwork; text and content gaps use discrete tokens. */
+.card-face[data-rarity] {
+  aspect-ratio: auto;
+  min-height: 288px;
+  grid-template-rows: minmax(48px,auto) 100px 24px minmax(80px,auto);
+}
+.card-face .card-name {
+  font-size: var(--text-compact);
+  line-height: var(--leading-compact);
+  letter-spacing: 0px;
+  padding-block: 4px 8px;
+}
+.card-face .card-kind {
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  letter-spacing: 0px;
+  padding: 0 8px 4px;
+}
+.card-face .card-values {
+  gap: 4px;
+  padding: 8px 4px 12px;
+  font-size: var(--text-compact);
+  line-height: var(--leading-compact);
+  letter-spacing: 0px;
+}
+.card-face .energy-cost {
+  width: 40px;
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+  letter-spacing: 0px;
+}
+.battle .card-cost { font-size: var(--text-caption); line-height: var(--leading-caption); }
+.battle .choice-grid { gap: 16px; padding: 8px 12px 0; align-items: stretch; }
+.battle .battle-deck-bar { margin-block: 12px; }
+.tackle-screen .deck-faces { gap: 20px 16px; padding: 8px; }
+.roll-track { padding-block: 20px; }
+@container (min-width: 200px) {
+  .card-face .card-name { font-size: var(--text-lead); line-height: 24px; }
+  .card-face .card-values { font-size: var(--text-body); line-height: var(--leading-body); }
+}
+@media (max-width: 650px) {
+  .battle .choice { flex: 0 0 calc((100% - 16px) / 2); }
+  .card-face .energy-cost { width: 32px; font-size: var(--text-subtitle); line-height: var(--leading-subtitle); }
+  .tackle-screen .deck-faces { gap: 20px 12px; }
+}

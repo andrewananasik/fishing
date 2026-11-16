@@ -1,0 +1,101 @@
+/* The deck is a full-viewport screen; keep the dialog's focus and Escape handling. */
+body:has(.tackle-screen[open]) { overflow: hidden; }
+.room-dialog.tackle-screen {
+  --muted: #d1c3ac;
+  --line: #c4a77b40;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 48px;
+  border: 0;
+  border-radius: 0;
+  background-color: #281b12;
+  background-image: linear-gradient(180deg, #100d0bbf 0%, #130e0873 40%, #130e0859 65%, #100d0bb3 100%), url('./art/tackle-table.jpg');
+  background-size: cover;
+  background-position: center;
+  box-shadow: none;
+  overflow: auto;
+}
+.tackle-screen[open] { display: flex; flex-direction: column; }
+.tackle-screen > * { width: 100%; max-width: 1600px; margin-inline: auto; }
+.tackle-screen .room-dialog-heading { flex-shrink: 0; margin-bottom: 20px; }
+.tackle-screen .room-dialog-heading,
+.tackle-screen .equipment-status,
+.tackle-screen .deck-group-heading,
+.tackle-screen .deck-group > p,
+.tackle-screen .tackle-footer { text-shadow: 0 2px 4px #000b; }
+.tackle-screen .room-dialog-heading button,
+.tackle-screen .room-tabs button { background: #21180feb; border-color: #a98b5e80; }
+.tackle-screen .room-dialog-heading button:hover,
+.tackle-screen .room-tabs button:hover,
+.tackle-screen .room-tabs button[aria-pressed="true"] { background: #493421; border-color: var(--amber); }
+.tackle-screen .deck-editor { flex: 1; display: flex; flex-direction: column; }
+.tackle-screen .equipment-status { margin-bottom: 0; flex-shrink: 0; }
+.tackle-screen .deck-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+  gap: 64px;
+  align-content: start;
+  padding-block: 24px;
+}
+.tackle-screen .deck-group { min-width: 0; }
+.tackle-screen .deck-group-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.tackle-screen .deck-group-heading h2 { font-size: var(--text-title); line-height: var(--leading-title); }
+.tackle-screen .deck-group > p { font-size: var(--text-compact); color: var(--muted); margin: 12px 0 20px; line-height: var(--leading-compact); }
+.tackle-screen .deck-selection { color: var(--amber); }
+.tackle-screen .deck-faces { max-width: none; align-items: stretch; grid-template-columns:repeat(4,minmax(0,1fr)); gap: 16px; }
+.tackle-screen .reserve { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.tackle-screen .card-face { padding: 8px; gap: 8px; }
+.tackle-screen .card-button { filter: drop-shadow(0 8px 7px #08050280); }
+.tackle-screen .card-art { width:100%; aspect-ratio:1.8; justify-self:center; }
+.tackle-screen .card-kind { font-size: var(--text-caption); line-height: var(--leading-caption); }
+.tackle-screen .card-name { font-size: var(--text-subtitle); line-height: var(--leading-subtitle); }
+.tackle-screen .card-values { font-size: var(--text-caption); line-height: var(--leading-caption); }
+.tackle-screen .tackle-footer { flex-shrink: 0; margin-block: 0; border-top: 1px solid var(--line); padding-top: 16px; font-size: var(--text-compact); line-height: var(--leading-compact); }
+
+@media (max-width: 760px) {
+  .room-dialog.tackle-screen { padding: 16px; }
+  .tackle-screen .room-dialog-heading { margin-bottom: 12px; }
+  .tackle-screen .room-dialog-heading h2 { font-size: var(--text-heading); line-height: var(--leading-heading); }
+  .tackle-screen .room-dialog-heading button { min-height: 44px; }
+  .tackle-screen .equipment-status { padding-block: 12px; gap: 12px; }
+  .tackle-screen .equipment-status > div { gap: 4px; }
+  .tackle-screen .equipment-status span { font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .tackle-screen .equipment-status strong { font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .tackle-screen .equipment-status small { font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .tackle-screen .deck-layout { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 16px; }
+  .tackle-screen .deck-group-heading h2 { font-size: var(--text-subtitle); line-height: var(--leading-subtitle); }
+  .tackle-screen .deck-group > p { font-size: var(--text-caption); margin: 4px 0 12px; line-height: var(--leading-caption); }
+  .tackle-screen .card-face { padding: 4px; gap: 4px; }
+  .tackle-screen:has(.room-tabs) { --tabs-height: 64px; }
+  .tackle-screen .deck-faces { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .tackle-screen .card-art { width:100%; }
+  .tackle-screen .card-kind { font-size: var(--text-caption); letter-spacing: 0px; line-height: var(--leading-caption); }
+  .tackle-screen .card-name { font-size: var(--text-body); line-height: var(--leading-body); }
+  .tackle-screen .card-values { font-size: var(--text-caption); gap: 4px; line-height: var(--leading-caption); }
+  .tackle-screen .card-values > span { padding: 4px 4px; }
+  .tackle-screen .tackle-footer { padding-top: 12px; font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .tackle-screen .room-tabs { margin-bottom: 12px; padding-bottom: 12px; }
+}
+
+@media (max-width: 760px) and (max-height: 700px) {
+  .room-dialog.tackle-screen { padding: 12px; }
+  .tackle-screen .room-dialog-heading h2 { font-size: var(--text-subtitle); line-height: var(--leading-subtitle); }
+  .tackle-screen .deck-layout { gap: 12px; padding-block: 12px; }
+  .tackle-screen .deck-group > p { font-size: var(--text-caption); margin-bottom: 8px; line-height: var(--leading-caption); }
+  .tackle-screen .card-name { font-size: var(--text-compact); line-height: var(--leading-compact); }
+}
+
+@media (max-height: 600px) and (min-width: 761px) {
+  .room-dialog.tackle-screen { padding: 16px 24px; }
+  .tackle-screen .room-dialog-heading { margin-bottom: 12px; }
+  .tackle-screen .equipment-status { padding-block: 8px; }
+  .tackle-screen .deck-layout { padding-block: 16px; }
+  .tackle-screen .deck-group > p { margin: 8px 0 12px; }
+  .tackle-screen .room-tabs { margin-bottom: 8px; padding-bottom: 8px; }
+}

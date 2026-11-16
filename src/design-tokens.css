@@ -1,0 +1,26 @@
+/* Harness: semantic type roles, integer pixels, spacing on a four-pixel grid. */
+:root {
+  --text-caption: 12px; --leading-caption: 16px;
+  --text-compact: 14px; --leading-compact: 20px;
+  --text-body: 16px; --leading-body: 24px;
+  --text-lead: 18px; --leading-lead: 28px;
+  --text-subtitle: 20px; --leading-subtitle: 28px;
+  --text-heading: 24px; --leading-heading: 32px;
+  --text-section: 28px; --leading-section: 36px;
+  --text-title: 32px; --leading-title: 40px;
+  --text-display-sm: 40px; --leading-display-sm: 48px;
+  --text-display: 48px; --leading-display: 56px;
+  --text-display-lg: 56px; --leading-display-lg: 64px;
+  --text-hero: 64px; --leading-hero: 72px;
+  --text-hero-lg: 80px; --leading-hero-lg: 88px;
+  --text-hero-xl: 96px; --leading-hero-xl: 104px;
+  --space-micro: 4px;
+  --space-related: 8px;
+  --space-control: 12px;
+  --space-component: 16px;
+  --space-group: 24px;
+  --space-section: 32px;
+  --radius-control: 8px;
+  --radius-panel: 12px;
+  --shadow-panel: 0 24px 80px #050e0bb3;
+}

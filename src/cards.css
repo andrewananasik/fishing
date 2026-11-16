@@ -1,0 +1,156 @@
+/* Shared card shell: the fishing illustrations stay unchanged inside the frame. */
+.card-button, .roll-card { container-type:inline-size; }
+.card-face[data-rarity] {
+  --card-trim:#c1c5af;
+  --card-trim-light:#e6e5ce;
+  --card-trim-dark:#626e5b;
+  position:relative;
+  isolation:isolate;
+  display:grid;
+  grid-template-rows:16% 41% 6% 1fr;
+  align-content:stretch;
+  gap:0;
+  width:100%;
+  min-width:0;
+  aspect-ratio: .69;
+  padding:6% 6% 7%;
+  border:1px solid #314a29;
+  border-radius:9% 5% 7% 4% / 5% 6% 4% 4%;
+  color:#f5edcf;
+  background:linear-gradient(132deg,#a4b576 0%,#67854e 5%,#395b36 9%,#5f8148 44%,#42643a 78%,#243d29 96%);
+  box-shadow:inset 3px 3px 1px #b0bf7b55,inset -4px -5px 2px #152b1b90,0 5px 9px #06130bb3;
+}
+.card-face::before {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:5% 5% 5%;
+  border:2px solid #8d9d71;
+  border-radius:4% 4% 5% 3%;
+  background:radial-gradient(ellipse at 50% 15%,#555d40,#343e30 85%);
+  box-shadow:inset 0 0 14px #1723158c,1px 1px 0 #b3bb8766;
+}
+.card-face[data-rarity='sharp'] { --card-trim:#7fc5bf; --card-trim-light:#b8e7d4; --card-trim-dark:#397d7a; }
+.card-face[data-rarity='firm'] { --card-trim:#d8b45e; --card-trim-light:#ffe6a0; --card-trim-dark:#8a652d; }
+.card-face .card-name {
+  position:relative;
+  z-index:3;
+  align-self:stretch;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:-2% -10% -3%;
+  padding:1% 10% 4% 15%;
+  border-top:2px solid var(--card-trim-light);
+  border-radius:48% 42% 12% 15% / 25% 28% 15% 20%;
+  background:linear-gradient(174deg,var(--card-trim-light),var(--card-trim) 32%,var(--card-trim-dark) 150%);
+  color:#fdf6df;
+  font-family:var(--display); font-weight:700; font-size:var(--text-compact); line-height:var(--leading-compact);
+  text-align:center;
+  text-shadow:1px 1px 0 #364131,-1px -1px 0 #364131,0 2px 2px #243024;
+  overflow-wrap:normal;
+  box-shadow:0 3px 2px #10241680;
+}
+.card-face .card-name::before,
+.card-face .card-name::after {
+  content:'';
+  position:absolute;
+  top:65%;
+  width:12%;
+  height:47%;
+  background:var(--card-trim);
+  box-shadow:inset 0 2px 1px #fff3;
+  z-index:-1;
+}
+.card-face .card-name::before { left:0; clip-path:polygon(12% 0,100% 0,85% 65%,0 100%); }
+.card-face .card-name::after { right:0; clip-path:polygon(0 0,88% 0,100% 100%,15% 65%); }
+.card-face .card-picture {
+  display:block;
+  position:relative;
+  width:100%;
+  min-height:0;
+  border:3px solid var(--card-trim);
+  border-top:0;
+  border-radius:6% 6% 16% 13%;
+  background:var(--card-trim);
+  box-shadow:0 2px 0 var(--card-trim-dark),0 3px 4px #172315;
+  overflow:hidden;
+}
+.card-face[data-type='attack'] .card-picture { clip-path:polygon(0 0,100% 0,100% 84%,54% 100%,46% 100%,0 84%); border-radius:0; }
+.card-face .card-art { width:100%; height:100%; border:0; border-radius:0; aspect-ratio:auto; filter:saturate(1.08) contrast(1.02); }
+.card-face .card-kind {
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  justify-self:center;
+  align-self:start;
+  min-width:44%;
+  margin-top:-6%;
+  padding:1% 8% 2%;
+  border:1px solid var(--card-trim-light);
+  border-radius:3px 3px 40% 40%;
+  background:var(--card-trim);
+  color:#2c3c30;
+  font-family:var(--display); font-weight:700; font-size:var(--text-caption); line-height:var(--leading-caption);
+  text-transform:none;
+  letter-spacing:0px;
+  box-shadow:0 2px 2px #0d201966;
+}
+.card-face .energy-cost {
+  position:absolute;
+  z-index:5;
+  top:-4%;
+  left:-8%;
+  display:grid;
+  place-items:center;
+  width:25%;
+  height:auto;
+  aspect-ratio:1;
+  border:3px solid #5b4225;
+  border-radius:48% 48% 44% 46%;
+  color:#fff5ce;
+  background:radial-gradient(circle at 38% 28%,#fff3a1 0%,#edce69 18%,#b28430 47%,#694621 64%,#ddbe63 71%,#62482c 80%);
+  box-shadow:0 2px 3px #0b2017b3,inset 0 0 0 1px #e0c678;
+  font-family:var(--display); font-weight:800; font-size:var(--text-heading); line-height:var(--leading-heading);
+  text-shadow:1px 2px 0 #353820,-1px -1px 0 #353820,1px -1px 0 #353820,-1px 1px 0 #353820;
+}
+.card-face .card-values {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5%;
+  padding:5% 3% 12%;
+  font-family:var(--display); font-weight:500; font-size:var(--text-compact); line-height:var(--leading-compact);
+  text-align:center;
+  text-shadow:0 1px 2px #122013;
+}
+.card-face .card-values::after { content:''; position:absolute; bottom:0; left:calc(50% - 2px); width:4px; height:4px; background:#99aa77; transform:rotate(45deg); opacity:.65; }
+.card-face .card-values > span[data-effect] { display:block; padding:0; background:none; color:#eee6ca; border-radius:0; }
+.card-face .card-values b { color:#f3d781; font-weight:700; font-variant-numeric:tabular-nums; }
+.battle .choice-grid { gap:16px; padding:8px 12px 0; align-items:start; }
+.battle .choice { width:clamp(125px,15vw,166px); flex:0 1 166px; }
+.battle .choice:disabled:not([data-played='true']) { opacity:.65; }
+.battle .choice:disabled .card-face { filter:saturate(.55); }
+.battle .card-cost { margin-top:8px; font-size:var(--text-caption); line-height:var(--leading-caption); }
+.battle .battle-arena { min-height:190px; padding-bottom:4px; }
+.battle .duel-rod { height:150px; }
+.battle .opponent > .fish-sprite { height:110px; }
+.battle .hand-summary { margin:0; }
+.battle .battle-deck-bar { margin:12px 0; }
+.battle .battle-actions { position:sticky; bottom:-20px; z-index:6; padding:8px 0; background:#17271ff5; border-radius:5px; }
+.card-button:hover:not(:disabled) .card-face { filter:brightness(1.1); }
+.deck-slot[aria-pressed='true'] { outline:0; }
+.deck-slot[aria-pressed='true'] .card-face { filter:brightness(1.12); outline:2px solid #f4cd83; outline-offset:4px; }
+.tackle-screen .deck-faces { gap:20px; padding:8px; }
+.roll-track { padding-block:20px; }
+@media (max-width:650px) {
+  .battle .choice-grid { gap:16px 12px; padding-inline:8px; }
+  .battle .choice { flex:0 0 calc((100% - 20px) / 3); width:auto; }
+  .card-face .card-picture { border-width:2px; }
+  .card-face .energy-cost { border-width:2px; }
+  .tackle-screen .deck-faces { gap:16px 12px; }
+  .battle .battle-actions { bottom:-12px; }
+}

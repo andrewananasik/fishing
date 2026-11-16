@@ -1,0 +1,192 @@
+[
+  {
+    "cue": "click",
+    "file": "click.ogg",
+    "pack": "impact-sounds",
+    "original": "impactWood_light_000.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "sha256": "eb45e35b4bed784d3f120de4afec4b0d6ac09d9e143cce8cfcb7d739e1b1f3c3"
+  },
+  {
+    "cue": "wood",
+    "file": "wood.ogg",
+    "pack": "rpg-audio",
+    "original": "doorOpen_1.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "license": "CC0-1.0",
+    "sha256": "4ab93bab96522d8eb109ff96dc57cb6765deb02448fe14c10472084be5bb2a0b"
+  },
+  {
+    "cue": "workshop",
+    "file": "workshop.ogg",
+    "pack": "impact-sounds",
+    "original": "impactMining_000.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "sha256": "36b4ea107222d073c67ca64dde26944975609202d5090b2f2021213c1a7e35cd"
+  },
+  {
+    "cue": "tackle",
+    "file": "tackle.ogg",
+    "pack": "rpg-audio",
+    "original": "beltHandle2.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "license": "CC0-1.0",
+    "sha256": "f3b692d5c83263c25bce779805b212dbab515d18a603c695fc6a1e8650cf5366"
+  },
+  {
+    "cue": "leaderboard",
+    "file": "leaderboard.ogg",
+    "pack": "impact-sounds",
+    "original": "impactBell_heavy_000.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "sha256": "94b8bb5f2d43ab65e4bcc32b28562416e9bc2c51d9fd4be1e333660ee52f977f"
+  },
+  {
+    "cue": "paper",
+    "file": "paper.ogg",
+    "pack": "rpg-audio",
+    "original": "bookFlip1.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "license": "CC0-1.0",
+    "sha256": "fa81ac2fedc8c641661b87e349630a36c9800e795e0c800e029214efdbe26a7d"
+  },
+  {
+    "cue": "coins",
+    "file": "coins.ogg",
+    "pack": "rpg-audio",
+    "original": "handleCoins.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "license": "CC0-1.0",
+    "sha256": "8a91f969e932df709df80ee124d86a51389eed9b67f22e5e716bc2bbf60d8dab"
+  },
+  {
+    "cue": "water",
+    "file": "water.ogg",
+    "pack": "water",
+    "original": "splash_06.ogg",
+    "author": "rubberduck",
+    "source": "https://opengameart.org/content/40-cc0-water-splash-slime-sfx",
+    "license": "CC0-1.0",
+    "sha256": "3581e5bee7307cbe6be17715714029259685ba283cb3423938378506b386afb4"
+  },
+  {
+    "cue": "card",
+    "file": "card.ogg",
+    "pack": "rpg-audio",
+    "original": "bookOpen.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "license": "CC0-1.0",
+    "sha256": "953390534377222bee89ac8cd9e60a58fdc037c71a4d7c18c43cd647c7f34ba8"
+  },
+  {
+    "cue": "close",
+    "file": "close.ogg",
+    "pack": "rpg-audio",
+    "original": "doorClose_1.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "license": "CC0-1.0",
+    "sha256": "834d29c60a8a8bfb50b158cdb6b7dfa8f02812a408a1ee9703d038dfab0b1aeb"
+  },
+  {
+    "cue": "cast",
+    "file": "cast.ogg",
+    "pack": "water",
+    "original": "splash_02.ogg",
+    "author": "rubberduck",
+    "source": "https://opengameart.org/content/40-cc0-water-splash-slime-sfx",
+    "license": "CC0-1.0",
+    "sha256": "eab0bb4bc01386528ba1e6244c6fd8940ee8d3c91ddb9e9cfea186e8560e04de"
+  },
+  {
+    "cue": "reel",
+    "file": "reel.ogg",
+    "pack": "rpg-audio",
+    "original": "metalLatch.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "license": "CC0-1.0",
+    "sha256": "ba9ba60b172b3ebc131a940f25793cd2e207aca7af73dc80d637277f060f1708"
+  },
+  {
+    "cue": "bite",
+    "file": "bite.ogg",
+    "pack": "water",
+    "original": "splash_09.ogg",
+    "author": "rubberduck",
+    "source": "https://opengameart.org/content/40-cc0-water-splash-slime-sfx",
+    "license": "CC0-1.0",
+    "sha256": "123f78e6bef82b5dfb24f0a93f759b309bd12b21d05905ab401756fc588a31dc"
+  },
+  {
+    "cue": "strike",
+    "file": "strike.ogg",
+    "pack": "impact-sounds",
+    "original": "impactPunch_heavy_000.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "sha256": "b33a8f14068aec24ec69ba85e5e87fdc41228975f6a1a3e44a6e7d6fc3d9f8d8"
+  },
+  {
+    "cue": "guard",
+    "file": "guard.ogg",
+    "pack": "impact-sounds",
+    "original": "impactMetal_light_000.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+  },
+  {
+    "cue": "turn",
+    "file": "turn.ogg",
+    "pack": "rpg-audio",
+    "original": "metalClick.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "license": "CC0-1.0",
+    "sha256": "9851a69d0c613e13bceef08060ecc4148f098ef487927cbebe270d642398a3b3"
+  },
+  {
+    "cue": "win",
+    "file": "win.ogg",
+    "pack": "voiceover-pack-fighter",
+    "original": "you_win.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/voiceover-pack-fighter",
+    "license": "CC0-1.0",
+    "sha256": "545b68cd40bc3f91af565b70ea0abcd759ed715edd23e556fa61027374660992"
+  },
+  {
+    "cue": "lose",
+    "file": "lose.ogg",
+    "pack": "voiceover-pack-fighter",
+    "original": "you_lose.ogg",
+    "author": "Kenney Vleugels",
+    "source": "https://kenney.nl/assets/voiceover-pack-fighter",
+    "license": "CC0-1.0",
+    "sha256": "b21aab4d4897f6d331fc354a4827edd56ab621a2a74dbbffd123e379d2f0c858"
+  },
+  {
+    "cue": "fight",
+    "file": "fight.mp3",
+    "pack": "user-provided",
+    "original": "nta3mde5ntg0nta3mtew_n4ltgrxccn4.mp3",
+    "author": "Unspecified",
+    "source": "sound/nta3mde5ntg0nta3mtew_n4ltgrxccn4.mp3",
+    "license": "user-provided",
+    "sha256": "13816e299e8ac6dab14e9a61b4e37c42c84ecc8f0969f4e085556d02bc6ef54b"
+  }
+]

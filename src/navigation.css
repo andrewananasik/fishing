@@ -1,0 +1,123 @@
+/* All art, routes and hit targets share a normalized water plane. */
+.water { --scene-image: url('./art/pond-isometric.png'); }
+.water[data-spot="bend"] { --scene-image: url('./art/pond-bend.png'); }
+.water[data-spot="deep"] { --scene-image: url('./art/pond-deep.png'); }
+.water[data-spot="channel"] { --scene-image: url('./art/pond-channel.png'); }
+.water-world { cursor: crosshair; touch-action: manipulation; }
+.water-world::before { background-size: 100% 100%; }
+.fishing-scene .water::after { background: linear-gradient(180deg,#0b1711a8,transparent 27%,transparent 72%,#0b1711b3); }
+.fishing-return { padding-right: 140px; }
+.water-world .fisherman { width: 12%; height: auto; bottom: auto; translate: -50% -55%; filter: drop-shadow(2px 9px 5px #071e19a3); }
+.water-world .boat-inventory { width: 12%; aspect-ratio: 1.5; bottom: auto; translate: -50% -55%; z-index: 2; }
+.water-world .boat-inventory span { left: 50%; top: 100%; bottom: auto; translate: -50% 0; font-size: var(--text-caption); padding: 4px 8px; opacity: 0; transition: opacity .15s; line-height: var(--leading-caption); }
+.water-world .boat-inventory:is(:hover,:focus-visible) span { opacity: 1; }
+.boat-wake { position: absolute; width: 13%; height: 5%; translate: -50% -25%; border: 1px solid #c1d9b12b; border-radius: 50%; box-shadow: 0 0 0 6px #aac7ab0a; }
+.boat-wake[data-moving="true"] { border-color: #e0edc86b; animation: boat-wake 1.6s ease-out infinite; }
+.voyage-route { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.voyage-route path { fill: none; stroke: #ecdb9b99; stroke-width: 1.5; stroke-dasharray: 5 9; }
+.voyage-route ellipse { fill: #f4d48f18; stroke: #ebd39fbb; stroke-width: 1.5; }
+.aim-ring { position: absolute; width: 30px; height: 15px; border: 1px solid #efd699; border-radius: 50%; translate: -50% -50%; box-shadow: 0 0 0 5px #efda9c12; pointer-events: none; }
+.water-world .zone-marker { top: 28px; padding: 8px 12px; background: #12231de0; border-color: #b7c1a444; border-radius: 3px; font-size: var(--text-compact); text-align: left; backdrop-filter: blur(8px); line-height: var(--leading-compact); }
+.zone-marker small { display: block; color: #bbc3a5; font-size: var(--text-caption); font-weight: 400; margin-top: 4px; line-height: var(--leading-caption); }
+.zone-anchor[data-selected="true"] .zone-marker { border-color: #e6bd78; background: #17271cf2; }
+.water-world .zone-anchor::before { content: ''; position: absolute; left: 0; top: 0; width: 100px; height: 40px; border: 1px dashed var(--zone-color); border-radius: 50%; opacity: .3; transform: translate(-50%, -50%); pointer-events: none; }
+.water-world .zone-anchor[data-selected="true"]::before { opacity: .8; }
+.water-world .zone-odds { display: none; bottom: 22px; }
+.water-world .zone-anchor:hover .zone-odds, .water-world .zone-anchor:focus-within .zone-odds { display: block; }
+.water-world .bite-callout { bottom: 24px; }
+.fishing-scene .cast-console { width: min(730px,calc(100% - 2 * var(--scene-gutter))); padding: 16px 20px 12px; background: #14241df5; border-color: #a894605e; border-radius: 5px; box-shadow: 0 12px 45px #08181040; }
+.navigation-status { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.navigation-status > div:first-child { display: grid; gap: 4px; }
+.navigation-status .eyebrow { font-size: var(--text-caption); letter-spacing: 1px; line-height: var(--leading-caption); }
+.navigation-status strong { font-family: var(--display); font-weight: 600; font-size: var(--text-heading); line-height: var(--leading-heading); }
+.navigation-actions { display: flex; gap: 8px; }
+.navigation-actions button { padding: 8px 8px; font-size: var(--text-caption); line-height: var(--leading-caption); }
+.local-catch { display: flex; flex-wrap: wrap; gap: 16px; margin: 8px 0 12px; padding-bottom: 12px; border-bottom: 1px solid #d3c18d26; font-size: var(--text-caption); color: #bbc4ad; line-height: var(--leading-caption); }
+.local-catch b { color: #f0dfb9; margin-left: 4px; font-weight: 500; }
+.fishing-scene .power-control .row { font-size: var(--text-caption); line-height: var(--leading-caption); }
+.fishing-scene .cast-meter { height: 6px; background: linear-gradient(90deg,#617d5c,#c9a66c); }
+.fishing-scene .cast-needle { height: 12px; }
+.fishing-scene .power-legend { font-size: var(--text-caption); line-height: var(--leading-caption); }
+.fishing-scene .status { font-size: var(--text-caption); margin-top: 8px; min-height: 1.4em; line-height: var(--leading-caption); }
+.navigation-help { position: absolute; left: 0; bottom: calc(100% + 12px); max-width: 440px; padding: 16px 20px; border: 1px solid #8a8059; border-radius: 5px; background: #12231df5; font-size: var(--text-caption); box-shadow: 0 10px 40px #07100a66; line-height: var(--leading-caption); }
+.navigation-help p + p { margin-top: 8px; }
+kbd { font-family: inherit; font-weight: 500; font-size: var(--text-caption); color: #ead6ab; line-height: var(--leading-caption); }
+@keyframes boat-wake { 0% { opacity: .3; scale: .9; } 50% { opacity: 1; } 100% { opacity: .2; scale: 1.15; } }
+@media (max-width: 999px) { .fishing-return { padding-right: 0; margin-top: 36px; } }
+@media (max-width: 650px) {
+  .fishing-hud h1 { font-size: var(--text-heading); line-height: var(--leading-heading); }
+  .fishing-hud .eyebrow { font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .fishing-scene .cast-console { bottom: 12px; padding: 12px; }
+  .navigation-status strong { font-size: var(--text-subtitle); line-height: var(--leading-subtitle); }
+  .navigation-actions button { padding: 8px; font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .fishing-scene .cast-controls { grid-template-columns: minmax(0,1fr) minmax(140px,auto); gap: 12px; }
+  .fishing-scene .hold, .fishing-scene .hook { font-size: var(--text-caption); padding: 12px; min-height: 44px; line-height: var(--leading-caption); }
+  .local-catch { font-size: var(--text-caption); gap: 12px; line-height: var(--leading-caption); }
+  .water-world .zone-marker { padding: 8px; font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .zone-marker small { font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .water-world .zone-anchor::before { width: 58px; height: 24px; }
+  .water-world .fisherman, .water-world .boat-inventory { width: 18%; }
+}
+@media (max-aspect-ratio: 1 / 1) {
+  .water-world { width: 100%; top: 47%; aspect-ratio: 1.15; }
+  .water-world::before { mask-image: linear-gradient(transparent,#000 8%,#000 90%,transparent); }
+  .water-world .zone-anchor[data-edge="right"] .zone-odds { left: 0; transform: translateX(-75%); }
+}
+@media (prefers-reduced-motion: reduce) { .boat-wake[data-moving="true"] { animation: none; } }
+
+/* Fishing controls belong to the reachable habitat, never to a distant target. */
+.zone-anchor[data-available="true"] { z-index: 3; }
+.zone-anchor[data-available="true"]::before { border-style: solid; box-shadow: 0 0 22px #e6c58432; }
+.zone-cast-menu { position: absolute; top: 88px; left: 0; transform: translateX(-50%); width: 226px; padding: 12px; border: 1px solid #9f8d5f; border-radius: 5px; background: #14231df5; box-shadow: 0 10px 25px #05110c55; cursor: default; animation: cast-menu-in .18s ease-out; }
+.zone-cast-menu::before { content: ''; position: absolute; left: 50%; top: -7px; width: 11px; height: 11px; background: #14231d; border-top: 1px solid #9f8d5f; border-left: 1px solid #9f8d5f; transform: translateX(-50%) rotate(45deg); }
+.zone-cast-menu > span { display: block; font-size: var(--text-caption); color: #c9ccb4; margin-bottom: 8px; line-height: var(--leading-caption); }
+.zone-cast-menu button { width: 100%; min-height: 44px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.zone-cast-menu kbd, .ring-action kbd { color: inherit; opacity: .7; font-family: "Inter",sans-serif; font-weight: 500; font-size: var(--text-caption); line-height: var(--leading-caption); }
+.water-controls { position: absolute; z-index: 4; left: var(--scene-gutter); right: var(--scene-gutter); bottom: var(--scene-gutter); display: flex; align-items: center; justify-content: space-between; gap: 16px; pointer-events: none; }
+.water-controls p { padding: 8px 12px; border-radius: 4px; background: #112019d9; color: #d3d6c1; font-size: var(--text-caption); margin: 0; line-height: var(--leading-caption); }
+.water-controls > div { display: flex; gap: 8px; }
+.water-controls button, .water-controls .navigation-help { pointer-events: auto; }
+.water-controls button { background: #14231de8; }
+.water-controls .navigation-help { display: block; bottom: calc(100% + 12px); }
+.water-controls .navigation-help p { background: none; padding: 0; font-size: var(--text-caption); line-height: var(--leading-caption); }
+.water-controls .navigation-help p + p { margin-top: 12px; }
+.hook-game { width: min(450px,calc(100% - 24px)); padding: 24px 28px; background: radial-gradient(ellipse at 50% 40%,#293c2b,#111f19 75%); border-color: #9d8859; }
+.hook-game::backdrop { background: #06100cb3; backdrop-filter: blur(3px); }
+.hook-game .room-dialog-heading { margin-bottom: 16px; gap: 12px; }
+.hook-game .room-dialog-heading h2 { font-size: var(--text-heading); line-height: var(--leading-heading); }
+.hook-game .room-dialog-heading button { font-size: var(--text-caption); padding: 8px; line-height: var(--leading-caption); }
+.hook-game-meta { display: flex; justify-content: space-between; gap: 12px; align-items: center; font-size: var(--text-caption); color: #b8bfa9; line-height: var(--leading-caption); }
+.hook-game-meta > :first-child { font-weight: 700; color: #b9d5a4; }
+.hook-game-meta [data-difficulty="medium"] { color: #ebc17d; }
+.hook-game-meta [data-difficulty="hard"] { color: #eda584; }
+.hook-ring { position: relative; width: min(280px,100%); margin: 16px auto 0; }
+.hook-ring svg { display: block; width: 100%; overflow: visible; }
+.hook-ring circle { fill: none; }
+.ring-orbit { stroke: #a6bea126; stroke-width: 1; stroke-dasharray: 2 7; }
+.ring-band { stroke: #d4ba7670; }
+.ring-edge { stroke: #edd59aaa; stroke-width: 1; }
+.ring-traveller { stroke: #eff4df; stroke-width: 3; filter: drop-shadow(0 0 5px #d0e4d085); }
+.ring-hook { fill: none; stroke: #dcc68c; stroke-width: 2; stroke-linecap: round; }
+.ring-cue { display: block; text-align: center; margin-top: -4px; font-size: var(--text-caption); letter-spacing: 1px; color: #bfcbb5; font-weight: 700; line-height: var(--leading-caption); }
+.hook-ring[data-ready="true"] .ring-band { stroke: #a8d38db3; }
+.hook-ring[data-ready="true"] .ring-traveller { stroke: #d4ffb9; filter: drop-shadow(0 0 8px #acd690); }
+.hook-ring[data-ready="true"] .ring-cue { color: #d4ffb9; }
+.hook-ring[data-missed="true"] .ring-cue { color: #e6ac8c; }
+.hook-instruction { min-height: 3em; margin: 16px 0; text-align: center; color: #d0d5bf; font-size: var(--text-compact); line-height: var(--leading-compact); }
+.ring-action { display: flex; justify-content: center; align-items: center; gap: 16px; width: 100%; min-height: 50px; font-size: var(--text-body); line-height: var(--leading-body); }
+.ring-action[data-biting="true"] { background: #c4dda0; box-shadow: 0 0 18px #b8d28a29; }
+.hook-footnote { margin: 12px 0 0; font-size: var(--text-caption); text-align: center; color: #a1b19b; line-height: var(--leading-caption); }
+@keyframes cast-menu-in { from { opacity: 0; translate: 0 -5px; } }
+@media (max-width:650px) {
+  .zone-cast-menu { width: 180px; top: 76px; }
+  .zone-anchor[data-edge="left"] .zone-cast-menu { transform: translateX(-38%); }
+  .zone-anchor[data-edge="right"] .zone-cast-menu { transform: translateX(-70%); }
+  .water-controls { gap: 8px; bottom: 16px; }
+  .water-controls p { font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .water-controls button { padding: 8px; font-size: var(--text-caption); line-height: var(--leading-caption); }
+  .hook-game { padding: 16px; }
+  .hook-game .room-dialog-heading h2 { font-size: var(--text-subtitle); line-height: var(--leading-subtitle); }
+  .hook-game-meta { font-size: var(--text-caption); line-height: var(--leading-caption); }
+}
+@media (max-height:650px) { .hook-ring { width: 180px; margin-top: 8px; } .hook-instruction { margin: 12px 0; } }
+@media (prefers-reduced-motion:reduce) { .zone-cast-menu { animation: none; } }
